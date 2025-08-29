@@ -1,4 +1,5 @@
-import { defineVitestConfig } from '@nuxt/test-utils/config'
+import { defineConfig } from 'vitest/config'
+import { defineVitestConfig, defineVitestProject } from '@nuxt/test-utils/config'
 
 const browserConfig = {
   browser: {
@@ -16,6 +17,12 @@ const defaultConfig = {
   exclude: ['tests/browser/**/*.spec.ts', 'node_modules/**', 'dist/**', '.data/**'],
 }
 
-export default defineVitestConfig({
-  test: process.env.VITEST_BROWSER_ENABLED === 'true' ? browserConfig : defaultConfig,
+export default defineConfig({
+  test: {
+    projects: [
+      await defineVitestProject({
+        test: browserConfig,
+      }),
+    ],
+  }
 })
