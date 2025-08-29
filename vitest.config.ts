@@ -1,21 +1,21 @@
-import { defineConfig } from 'vitest/config'
-import { defineVitestProject } from '@nuxt/test-utils/config'
+import { defineVitestConfig } from '@nuxt/test-utils/config'
 
-export default defineConfig({
-  test: { 
-    projects: [
-      await defineVitestProject({
-        test: {
-          environment: 'node',
-          browser: {
-            enabled: true,
-            provider: 'playwright',
-            instances: [{
-              browser: 'chromium',
-            }],
-          },
-        },
-      }),
-    ],
-  }
+const browserConfig = {
+  browser: {
+    enabled: true,
+    provider: 'playwright',
+    instances: [{ browser: 'chromium' }],
+  },
+  environment: 'nuxt',
+  include: ['tests/browser/**/*.spec.ts'],
+  setupFiles: ['vitest-browser-vue'],
+}
+
+const defaultConfig = {
+  environment: 'nuxt',
+  exclude: ['tests/browser/**/*.spec.ts', 'node_modules/**', 'dist/**', '.data/**'],
+}
+
+export default defineVitestConfig({
+  test: process.env.VITEST_BROWSER_ENABLED === 'true' ? browserConfig : defaultConfig,
 })
